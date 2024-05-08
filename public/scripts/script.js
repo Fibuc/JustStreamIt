@@ -101,38 +101,44 @@ function modifyBestFilmInformations() {
     modifyMovieTitle(titleInHTML, bestMovieDatas)
 }
 
-async function showMoviesOfACategory(category) {
+async function getMoviesDatas(requestObject, nbApiPageNeedCategories, category) {
+    let requestForAPI = generateRequestForTitlesAPI(requestObject)
+    arrayMovies = await fetchMoviesFromAPI(nbApiPageNeedCategories, requestForAPI)
+    return await fetchMoviesDatasFromAPI(arrayMovies)
+    
+}
+
+function modifyCategoryTitle(idHTML, category) {
+    document.querySelector("#" + idHTML + " h1").innerText = category
+}
+
+async function showMoviesOfACategory(idHTML) {
     let requestObject = {}
-    switch (category) {
+    switch (idHTML) {
         case bestMoviesHTMLId:
             requestObject = createRequestObject()
-            requestForAPI = generateRequestForTitlesAPI(requestObject)
-            arrayMovies =  await fetchMoviesFromAPI(nbApiPageNeedBestFilms, requestForAPI)
-            bestMoviesDatas = await fetchMoviesDatasFromAPI(arrayMovies)
+            bestMoviesDatas = await getMoviesDatas(requestObject, nbApiPageNeedBestFilms, idHTML)
             bestMovieDatas = bestMoviesDatas.shift()
-            modifyMoviesInformations(bestMoviesDatas, category)
+            modifyMoviesInformations(bestMoviesDatas, idHTML)
             modifyBestFilmInformations()
             break
         case firstCategoryMoviesHTMLId:
             requestObject = createRequestObject(defaultFirstFreeCategory)
-            requestForAPI = generateRequestForTitlesAPI(requestObject)
-            arrayMovies = await fetchMoviesFromAPI(nbApiPageNeedCategories, requestForAPI)
-            bestMoviesDatas = await fetchMoviesDatasFromAPI(arrayMovies)
-            modifyMoviesInformations(bestMoviesDatas, category)
+            bestMoviesDatasOfCategory1 = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
+            modifyMoviesInformations(bestMoviesDatasOfCategory1, idHTML)
+            modifyCategoryTitle(idHTML, defaultFirstFreeCategory)
             break
         case secondCategoryMoviesHTMLId:
             requestObject = createRequestObject(defaultSecondFreeCategory)
-            requestForAPI = generateRequestForTitlesAPI(requestObject)
-            arrayMovies = await fetchMoviesFromAPI(nbApiPageNeedCategories, requestForAPI)
-            bestMoviesDatas = await fetchMoviesDatasFromAPI(arrayMovies)
-            modifyMoviesInformations(bestMoviesDatas, category)
+            bestMoviesDatasOfCategory2 = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
+            modifyMoviesInformations(bestMoviesDatasOfCategory2, idHTML)
+            modifyCategoryTitle(idHTML, defaultSecondFreeCategory)
             break
         case freeCategoryMoviesHTMLId:
             requestObject = createRequestObject(defaultSelectedCategory)
-            requestForAPI = generateRequestForTitlesAPI(requestObject)
-            arrayMovies = await fetchMoviesFromAPI(nbApiPageNeedCategories, requestForAPI)
-            bestMoviesDatas = await fetchMoviesDatasFromAPI(arrayMovies)
-            modifyMoviesInformations(bestMoviesDatas, category)
+            bestMoviesDatasOfSelectedCategory = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
+            modifyMoviesInformations(bestMoviesDatasOfSelectedCategory, idHTML)
+            modifyCategoryTitle(idHTML, defaultSelectedCategory)
             break
     }
 }
@@ -143,6 +149,3 @@ function showAllMovies() {
     showMoviesOfACategory(secondCategoryMoviesHTMLId)
     showMoviesOfACategory(freeCategoryMoviesHTMLId)
 }
-
-let requestObject = createRequestObject("Action")
-let fullRequest = generateRequestForTitlesAPI(requestObject)
