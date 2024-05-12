@@ -1,1 +1,1 @@
-showAllMovies()
+run()

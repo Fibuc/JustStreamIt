@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+
+    <!-- BOOTSTRAP CSS -->
+    <link rel="stylesheet" href="bootstrap.css">
+    <!-- Surcharge et custom css de bootstrap -->
+    <link rel="stylesheet" href="custom.css">
     <script src="../public/scripts/config.js" defer></script>
     <script src="../public/scripts/script.js" defer></script>
     <script src="../public/scripts/main.js" defer></script>
@@ -11,142 +15,74 @@
 
 </head>
 <body>
-    <header class="">
-        <img src="images/logo.png" alt="Logo JustStreamIt">
-        <h1>Vidéos à la demande</h1>
+    <header class="bg-secondary container">
+        <div class="row row-cols-md-2 row-cols-lg-3">
+            <div class="col-sm-12 col-md-4">
+                <img src="images/logo.png" alt="Logo JustStreamIt" title="Logo JustStreamIt" class="mx-auto d-block">
+            </div>
+            <div class="col col-md-7 col-lg-8 text-md-end text-lg-start my-auto ">   
+                <h1 class="display-5 d-none d-md-block text-white">Vidéos à la demande</h1>
+            </div>
+        </div>
     </header>
 
     <main>
-        <section id="best-film">
-            <h1 class="">Meilleur Film</h1>
-            <div class="">
-                <img src="https://picsum.photos/300/300">
-                <h2 class="">Nom du film</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ipsum dolor sit amet consectetur. Nisl purus in mollis nunc sed. Pellentesque elit ullamcorper dignissim cras tincidunt lobortis. Sed enim ut sem viverra aliquet eget sit amet.</p>
-                <button class="btn btn-danger">Détails</button>
+        <h1 class="text-center mt-5 mb-5">Meilleur Film</h1>
+        <section id="best-film" class="container border border-black border-5">
+            <div class="row p-2">
+              <!-- Image -->
+              <div class="col col-12 col-md-4 col-lg-3">
+                <img src="" class="img-best-movie img-sm-fluid mx-auto bg-body-tertiary rounded">
+              </div>
+              <!-- Conteneurs à droite -->
+              <div class="col">
+                <!-- Titre -->
+                <div class="row">
+                  <div class="col col-12">
+                    <p class="text-black h1" id="title">Titre 1 film</p>
+                  </div>
+                </div>
+                <!-- Description -->
+                <div class="row">
+                  <div class="col">
+                    <p class="text-black display-6" id="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ipsum dolor sit amet consectetur. Nisl purus in mollis nunc sed. Pellentesque elit ullamcorper dignissim cras tincidunt lobortis. Sed enim ut sem viverra aliquet eget sit amet.</p>
+                  </div>
+                </div>
+                <!-- Bouton -->
+                <div class="row row-cols-md-2 row-cols-lg-4 justify-content-end">
+                  <div class="col text-md-end d-grid d-block">
+                    <button class="btn btn-danger btn-lg mx-md-3 my-md-4">Détails</button>
+                  </div>
+                </div>
+              </div>
             </div>
         </section>
 
-        
-        <section id="best-category">
-            <h1 class="">Films les mieux notés</h1>
-
-            <img src="https://picsum.photos/300/300">
-            <p class="">Titre 1 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 2 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 3 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 4 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 5 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 6 film</p>
-            <button class="">Détails</button>
-
-        </section>
-
-        <section id="first-category">
-            <h1 class="">Catégorie 1</h1>
-
-            <img src="https://picsum.photos/300/300">
-            <p class="absolute text-white bg-black/50">Titre 1 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 2 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 3 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 4 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 5 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 6 film</p>
-            <button class="">Détails</button>
-            
+        <!-- Section des films les mieux notés -->
+        <section id="best-category" class="container">
+            <h1 class="text-center mb-5 mt-5">Films les mieux notés</h1>
         </section>
         
-        <section id="second-category">
-            <h1 class="">Catégorie 2</h1>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 1 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 2 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 3 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 4 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 5 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 6 film</p>
-            <button class="">Détails</button>
-
+        <!-- Section des films de la catégorie définie dans defaultFirstFreeCategory -->
+        <section id="first-category" class="container">
+            <h1 class="text-center mb-5 mt-5">Catégorie 1</h1>
         </section>
 
-        <section id="free-category">
-            <h1 class="">Catégorie à choisir</h1>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 1 film</p>
-            <button class="">Détails</button>
-            
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 2 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 3 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 4 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p class="test">Titre 5 film</p>
-            <button class="">Détails</button>
-
-            <img src="https://picsum.photos/300/300">
-            <p>Titre 6 film</p>
-            <button class="">Détails</button>
-
+        <!-- Section des films de la catégorie définie dans defaultSecondFreeCategory -->
+        <section id="second-category" class="container">
+            <h1 class="text-center mb-5 mt-5">Catégorie 2</h1>
+        </section>
+        
+        <!-- Section des films de la catégorie définie dans defaultSelectedCategory -->
+        <h1 class="text-center mt-5">Catégorie à choisir</h1>
+        <section id="free-category" class="container">
+            <select class="form-select form-select-lg mb-5" aria-label="Large select example" id="selection">
+                <option selected>Open this select menu</option>
+                <option value="1">One</option>
+            </select>
         </section>
     </main>
 
-    <footer>
-        <p>Ici c'est le footer</p>
-    </footer>
+    <footer></footer>
 </body>
 </html>

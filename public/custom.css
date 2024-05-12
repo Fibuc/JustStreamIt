@@ -1,0 +1,59 @@
+.img-best-movie{
+    width: 100%;
+}
+
+.img-best-movie:hover{
+    opacity: 80%;
+}
+
+.category-img-movie{
+    width: 80%;
+}
+
+.category-img-movie:hover{
+    opacity: 80%;
+}
+
+.container {
+    position: relative;
+}
+
+.film-title{
+    position: relative;
+    top: 15%;
+    left: 5%;
+}
+
+.btn-dark{
+    position: absolute;
+    left: 60%;
+    top: 50%;
+}
+
+.h1{
+    font-size: 4em;
+    font-weight: 700;
+    font-family: roboto;
+}
+
+.display-6{
+    font-size: 1.5em;
+}
+
+.overlay {
+    position: absolute;
+    top: 20%;
+    left: 13%;
+    width: 74%;
+    height: 25%;
+    background-color: rgba(0, 0, 0, 0.46);
+}
+
+.shadow-lg{
+    --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.4);
+}
+
+.shadow-lg:hover{
+    --bs-box-shadow-lg: 0 1rem 1rem rgba(0, 0, 0, 0.6);
+}
+
