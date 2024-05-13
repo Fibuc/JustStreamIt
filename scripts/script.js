@@ -208,7 +208,6 @@ function createMovieColumn(indexMovieNumber) {
     currentMovieNumber = indexMovieNumber + 1
     // Création de la colonne.
     let classToAdd = addClassDNoneIfSmallScreens(currentMovieNumber)
-    console.log(classToAdd)
     const colDiv = document.createElement("div")
     colDiv.classList.add("col", "position-relative")
     // Ajout de la classe permettant de limiter l'affichage pour les petits écrans.
@@ -245,21 +244,42 @@ function createMovieColumn(indexMovieNumber) {
     return colDiv
 }
 
+function createShowMoreButton(indexSection) {
+    const btnShowMore = document.createElement("button")
+    btnShowMore.textContent = "Voir plus"
+    btnShowMore.classList.add("btn", "btn-danger", "col-5", "btn-lg", "mx-auto", "d-lg-none")
+    btnShowMore.id = "btn-show-more-" + indexSection
+    return btnShowMore
+}
+
+function eventShowMore(elementToListen, section) {
+    elementToListen.addEventListener("click", () => {
+        allCols = section.querySelectorAll("div.col")
+        for (let i = 0; i < allCols.length; i++) {
+            if (allCols[i].classList.contains("d-none")) {
+                allCols[i].classList.remove("d-none")
+            }
+        elementToListen.classList.add("d-none")
+        }
+    })
+}
+
 function createAllCategories() {
     let allSections = document.querySelectorAll("section")
-    for (let currentSection = 0; currentSection < allSections.length; currentSection++)
-        if (allSections[currentSection].id !== bestMovieHTMLId) {
+    for (let indexSection = 0; indexSection < allSections.length; indexSection++)
+        if (allSections[indexSection].id !== bestMovieHTMLId) {
             const rowDiv = document.createElement("div")
             rowDiv.classList.add("row", "row-cols-1", "row-cols-md-2", "row-cols-lg-3", "grid", "gap-0", "row-gap-5", "align-items-center")
             for (let i = 0; i < nbMovieByCategory; i++) {
                 let movieColumns = createMovieColumn(i)
                 rowDiv.appendChild(movieColumns)
             }
-            allSections[currentSection].appendChild(rowDiv)
+            const btnShowMore = createShowMoreButton(indexSection)
+            eventShowMore(btnShowMore, allSections[indexSection])
+            rowDiv.appendChild(btnShowMore)
+            allSections[indexSection].appendChild(rowDiv)
         }
 }
-
-
 
 async function modifySelectedCategories() {
     await fetchAllCategories()
