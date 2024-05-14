@@ -1,94 +1,3 @@
-// Objets contenant les informations des films et catégories.
-// Toutes les catégories
-const allCategories = []
-
-// Meilleurs films.
-let bestMovieDatas = []
-let bestMoviesDatas = []
-
-// Meilleurs films des catégories définies.
-let bestMoviesDatasOfCategory1 = []
-let bestMoviesDatasOfCategory2 = []
-let bestMoviesDatasOfSelectedCategory = []
-
-
-/**
- * Effectue une requête GET de la page URL de l'API entrée en paramètre et
- * renvoie les données en format JSON.
- * 
- * @param {string} APIRequest - Adresse URL de la requête à l'API.
- * @returns {Promise<object>} Une promesse qui se résout avec les données
- * JSON de la réponse de l'API.
- */
-async function fetchJsonFromApiPage(APIRequest) {
-    let response = await fetch(APIRequest)
-    return await response.json()
-}
-
-/**
- * Génère une URL de requête pour l'API Titles en fonction de l'objet entré en argument
- * et la retourne formaté sous forme de chaîne de caractères.
- * 
- * @param {object} requestObject - L'objet contenant les éléments de requête.
- * @returns {string} L'URL de requête générée et formaté pour l'API en chaîne de caractères.
- */
-function generateRequestForTitlesAPI(requestObject) {
-    let requestForAPI = apiHTMLTitles + "?"
-    for (const element in requestObject) {
-        requestForAPI += element + "=" + requestObject[element] + "&"
-    }
-    return requestForAPI
-}
-
-/**
- * Crée un objet de requête pour l'API en fonction de la catégorie fournie.
- * 
- * @param {string} category - La catégorie pour l'objet de requête.
- * @returns {object} L'objet de requête généré avec les propriétés genre et sort_by.
- */
-function createRequestObject(category) {
-    const requestObject = {}
-    if (category) {
-        requestObject.genre = category
-    }
-    requestObject.sort_by = "-imdb_score"
-    return requestObject
-}
-
-/**
- * Récupère les informations générales des films depuis l'API en fonction du nombre de pages API nécessaires et de la requête API initiale.
- * 
- * @param {number} nbApiPageNeed - Le nombre de pages API à récupérer.
- * @param {string} APIRequest - L'URL de la requête API initiale.
- * @returns {Promise<Array>} Une promesse qui se résout avec un tableau des films récupérés depuis l'API.
- */
-async function fetchMoviesFromAPI(nbApiPageNeed, APIRequest) {
-    let arrayMovies = []
-    let jsonResponse = await fetchJsonFromApiPage(APIRequest)
-    while (nbApiPageNeed > 0) {
-        for (element in jsonResponse.results) {
-            arrayMovies.push(jsonResponse.results[element])
-        }
-        requestNextPage = jsonResponse.next
-        nbApiPageNeed--
-        jsonResponse = await fetchJsonFromApiPage(requestNextPage)
-    }
-    return arrayMovies
-}
-
-/**
- * Récupère les informations détaillées des films depuis l'URL présent dans les informations générales des films.
- * 
- * @param {Array<Object>} arrayMovies - Tableau d'objets de films contenant l'url de chacun des films.
- * @returns {Promise<Array<Object>>} - Tableau d'objets comprenant toutes les informations détaillées des films.
- */
-async function fetchMoviesDatasFromAPI(arrayMovies) {
-    let arrayMoviesInformations = []
-    for (let i = 0; i < arrayMovies.length; i++) {
-        arrayMoviesInformations.push(await fetchJsonFromApiPage(arrayMovies[i].url))
-    }
-    return arrayMoviesInformations
-}
 /**
  * Modifie les éléments HTML d'une catégorie par les données des films fournis.
  * 
@@ -105,17 +14,16 @@ function modifyMoviesInformations(allMovies, categoryID) {
     }
 }
 
-
-function modifyMovieTitle(titleInHTML, movie){
-    let movieName = getMovieName(movie)
-    titleInHTML.innerText = movieName
-}
-
 function getMovieName(movie) {
     if (movie.original_title) {
         return movie.original_title
     }
     return movie.title
+}
+
+function modifyMovieTitle(titleInHTML, movie){
+    let movieName = getMovieName(movie)
+    titleInHTML.innerText = movieName
 }
 
 function modifyMovieImage(imageInHTML, movieInformations) {
@@ -133,13 +41,6 @@ function modifyBestFilmInformations() {
     descriptionInHTML.innerText = bestMovieDatas.description
     modifyMovieImage(imageInHTML, bestMovieDatas)
     modifyMovieTitle(titleInHTML, bestMovieDatas)
-}
-
-async function getMoviesDatas(requestObject, nbApiPageNeedCategories, category) {
-    let requestForAPI = generateRequestForTitlesAPI(requestObject)
-    arrayMovies = await fetchMoviesFromAPI(nbApiPageNeedCategories, requestForAPI)
-    return await fetchMoviesDatasFromAPI(arrayMovies)
-    
 }
 
 function modifyCategoryTitle(idHTML, category) {
@@ -173,21 +74,6 @@ async function showMoviesOfACategory(idHTML) {
             bestMoviesDatasOfSelectedCategory = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
             modifyMoviesInformations(bestMoviesDatasOfSelectedCategory, idHTML)
             break
-    }
-}
-
-function getCategoryName(response) {
-    for (let i = 0; i < response.length; i++) {
-        allCategories.push(response[i].name)
-    }
-}
-
-async function fetchAllCategories() {
-    let response = await fetchJsonFromApiPage(apiHTMLGenres)
-    getCategoryName(response.results)
-    while (response.next) {
-        response = await fetchJsonFromApiPage(response.next)
-        getCategoryName(response.results)
     }
 }
 
@@ -230,6 +116,8 @@ function createMovieColumn(indexMovieNumber) {
 
     // Création du bouton.
     const button = document.createElement("button")
+    button.type = "button"
+    button.id = "open-modal"
     button.classList.add("btn", "btn-dark")
     button.textContent = "Détails"
 
@@ -264,6 +152,14 @@ function eventShowMore(elementToListen, section) {
     })
 }
 
+function eventChangeCategory() {
+    const selectionDiv = document.getElementById("selection")
+    selectionDiv.addEventListener("change", () => {
+        defaultSelectedCategory = allCategories[selectionDiv.value]
+        showMoviesOfACategory(freeCategoryMoviesHTMLId)
+    })
+}
+
 function createAllCategories() {
     let allSections = document.querySelectorAll("section")
     for (let indexSection = 0; indexSection < allSections.length; indexSection++)
@@ -291,9 +187,57 @@ async function modifySelectedCategories() {
         } else {
             options += `<option value="${i}">${allCategories[i]}</option>`
         }
-        
     }
     sectionInHTML.innerHTML = options
+    eventChangeCategory()
+}
+
+function addCloseModalOption(modal, button, mainOverlay) {
+    button.onclick = function() {
+        mainOverlay.classList.add("d-none")
+        modal.classList.remove("d-block")
+    }
+}
+
+function addOpenModalOption(modal, button, mainOverlay) {
+    button.onclick = function() {
+        mainOverlay.classList.remove("d-none")
+        modal.classList.add("d-block")
+    }
+}
+
+function modifyModalButtons() {
+    const modal = document.getElementById("movie-modal")
+    const mainOverlay = document.getElementById("main-overlay")
+    const buttonsModalOpen = document.querySelectorAll("#open-modal")
+    const buttonsModalClose = modal.querySelectorAll("#close-modal")    
+
+    // Ajoute la fonctionnalité de d'ouverture de la fenêtre lors du clique sur chaque bouton
+    for (let i = 0; i < buttonsModalOpen.length; i++) {
+        addOpenModalOption(modal, buttonsModalOpen[i], mainOverlay)
+    }
+
+    for (let i = 0; i < buttonsModalClose.length; i++) {
+        addCloseModalOption(modal, buttonsModalClose[i], mainOverlay)
+    }
+
+
+    // Ajoute la fonctionnalité de fermeture de la fenêtre lors du clique sur chaque bouton
+    // for (let i = 0; i < buttonsModalClose.length; i++) {
+    //     buttonsModalClose[i].onclick = function() {
+    //         modal.classList.remove("d-block")
+    //         mainOverlay.classList.add("d-none")
+    //     }
+    // }
+
+    // Ferme la fenêtre lorsque l'utilisteur clique autre part que la fenêtre.
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            console.log(event.target)
+            modal.classList.remove("d-block")
+            mainOverlay.classList.add("d-none")
+        }
+    }
 }
 
 function showAllMovies() {
@@ -307,4 +251,5 @@ function run() {
     createAllCategories()
     showAllMovies()
     modifySelectedCategories()
+    modifyModalButtons()
 }

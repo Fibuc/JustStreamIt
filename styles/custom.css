@@ -6,6 +6,10 @@
     opacity: 80%;
 }
 
+.modal-img{
+    width: 100%;
+}
+
 .category-img-movie{
     width: 80%;
 }
@@ -36,8 +40,19 @@
     font-family: roboto;
 }
 
+h5{
+    font-size: 1em;
+}
+
 .display-6{
     font-size: 1.5em;
+}
+
+@media (min-width: 992px) {
+    .modal-lg,
+    .modal-xl {
+      --bs-modal-width: 700px;
+    }
 }
 
 .overlay {
