@@ -99,9 +99,9 @@ async function modifyCategory(idHTML) {
             requestObject = createRequestObject(defaultSelectedCategory)
             bestMoviesDatasOfSelectedCategory = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
             modifyMoviesInformations(bestMoviesDatasOfSelectedCategory, idHTML)
+            modifyModalActions()
             break
     }
-    modifyModalButtons()
 }
 
 function addClassDNoneIfSmallScreens(currentMovieNumber) {
@@ -295,11 +295,18 @@ function addOpenModalOption(modal, button, mainOverlay) {
     }
 }
 
-function modifyModalButtons() {
+function modifyModalActions() {
     const modal = document.getElementById("movie-modal")
     const mainOverlay = document.getElementById("main-overlay")
     const buttonsModalOpen = document.querySelectorAll("#open-modal")
-    const buttonsModalClose = modal.querySelectorAll("#close-modal")    
+    const buttonsModalClose = modal.querySelectorAll("#close-modal")
+    const allCategoryImages = document.querySelectorAll(".category-img-movie")
+    const allImagesMovies = [document.querySelectorAll(".img-best-movie")[0]]
+    allCategoryImages.forEach(image => {
+        allImagesMovies.push(image)
+    })
+
+    console.log(allImagesMovies)
 
     // Ajoute la fonctionnalité de d'ouverture de la fenêtre lors du clique sur chaque bouton
     for (let i = 0; i < buttonsModalOpen.length; i++) {
@@ -307,9 +314,15 @@ function modifyModalButtons() {
         buttonsModalOpen[i].value = i
     }
 
-    for (let i = 0; i < buttonsModalClose.length; i++) {
-        addCloseModalOption(modal, buttonsModalClose[i], mainOverlay)
+    // Ajoute la fonctionnalité de d'ouverture de la fenêtre lors du clique sur chaque image
+    for (let i = 0; i < allImagesMovies.length; i++) {
+        addOpenModalOption(modal, allImagesMovies[i], mainOverlay)
+        allImagesMovies[i].value = i
     }
+
+    buttonsModalClose.forEach(button => {
+        addCloseModalOption(modal, button, mainOverlay)
+    })
 
     window.onclick = function(event) {
         if (event.target == modal) {
