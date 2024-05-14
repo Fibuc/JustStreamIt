@@ -20,6 +20,7 @@ const nbApiPageNeedBestFilms = Math.ceil((nbMovieByCategory + 1)/ nbMovieByApiPa
 
 
 // **** Catégories par défaut. ****
+const numberOfCategoryShow = 4
 const defaultFirstCategory = "Drama"
 const defaultSecondCategory = "Sci-Fi"
 let defaultSelectedCategory = "Comedy"

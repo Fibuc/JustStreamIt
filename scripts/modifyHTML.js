@@ -33,21 +33,47 @@ function modifyMovieImage(imageInHTML, movieInformations) {
     imageInHTML.title = imageDescription
 }
 
+function checkLengthDescription(description) {
+    const minCaractereForDescription = 20
+    return description.length > minCaractereForDescription
+}
+
+function modifyDescription(descriptionInHTML, movieInformations, longDescription) {
+    let descriptionToAppend = ""
+    if (longDescription) {
+        descriptionToAppend = movieInformations.long_description
+        if (checkLengthDescription(descriptionToAppend)) {
+            descriptionInHTML.innerText = descriptionToAppend
+            return
+        }
+    }
+    descriptionToAppend = movieInformations.description
+    if (checkLengthDescription(descriptionToAppend)) {
+        descriptionInHTML.innerText = descriptionToAppend
+        return
+    }
+    descriptionInHTML.innerText = "Pas de description."
+
+}
+
 function modifyBestFilmInformations() {
     sectionInHTML = document.querySelector("#best-film")
+
     imageInHTML = sectionInHTML.querySelector("img")
-    titleInHTML = sectionInHTML.querySelector("#title")
-    descriptionInHTML = sectionInHTML.querySelector("#description")
-    descriptionInHTML.innerText = bestMovieDatas.description
     modifyMovieImage(imageInHTML, bestMovieDatas)
+
+    titleInHTML = sectionInHTML.querySelector("#title")
     modifyMovieTitle(titleInHTML, bestMovieDatas)
+
+    descriptionInHTML = sectionInHTML.querySelector("#description")
+    modifyDescription(descriptionInHTML, bestMovieDatas, true)
 }
 
 function modifyCategoryTitle(idHTML, category) {
     document.querySelector("#" + idHTML + " h1").innerText = category
 }
 
-async function showMoviesOfACategory(idHTML) {
+async function modifyCategory(idHTML) {
     let requestObject = {}
     switch (idHTML) {
         case bestMoviesHTMLId:
@@ -75,6 +101,7 @@ async function showMoviesOfACategory(idHTML) {
             modifyMoviesInformations(bestMoviesDatasOfSelectedCategory, idHTML)
             break
     }
+    modifyModalButtons()
 }
 
 function addClassDNoneIfSmallScreens(currentMovieNumber) {
@@ -156,7 +183,7 @@ function eventChangeCategory() {
     const selectionDiv = document.getElementById("selection")
     selectionDiv.addEventListener("change", () => {
         defaultSelectedCategory = allCategories[selectionDiv.value]
-        showMoviesOfACategory(freeCategoryMoviesHTMLId)
+        modifyCategory(freeCategoryMoviesHTMLId)
     })
 }
 
@@ -175,6 +202,66 @@ function createAllCategories() {
             rowDiv.appendChild(btnShowMore)
             allSections[indexSection].appendChild(rowDiv)
         }
+}
+
+function getMovieInformations(value) {
+    bestMovie = 1
+    let numberOfMoviesShow = numberOfCategoryShow * nbMovieByCategory + bestMovie
+    let indexStartBestCategory = numberOfMoviesShow - nbMovieByCategory * 4
+    let indexStartFirstCategory = numberOfMoviesShow - nbMovieByCategory * 3
+    let indexStartSecondCategory = numberOfMoviesShow - nbMovieByCategory * 2
+    let indexStartFreeCategory = numberOfMoviesShow - nbMovieByCategory
+    if (value >= indexStartFreeCategory) {
+        let index = value - indexStartFreeCategory
+        return bestMoviesDatasOfSelectedCategory[index]
+    } else if (value >= indexStartSecondCategory) {
+        let index = value - indexStartSecondCategory
+        return bestMoviesDatasOfCategory2[index]
+    } else if (value >= indexStartFirstCategory) {
+        let index = value - indexStartFirstCategory
+        return bestMoviesDatasOfCategory1[index]
+    } else if (value >= indexStartBestCategory) {
+        let index = value - indexStartBestCategory
+        return bestMoviesDatas[index]
+    }
+    return bestMovieDatas
+}
+
+function modifyModalInformations(value) {
+    const modal = document.getElementById("movie-modal")
+    const movieInformations = getMovieInformations(value)
+
+    const movieTitle = modal.querySelector("h1")
+    modifyMovieTitle(movieTitle, movieInformations)
+
+    const movieImages = modal.querySelectorAll("img")
+    for (let i = 0; i < movieImages.length; i++) {
+        modifyMovieImage(movieImages[i], movieInformations)
+    }
+
+    const movieDescription = modal.querySelector("#modal-description")
+    modifyDescription(movieDescription, movieInformations, true)
+
+    const movieYear = modal.querySelector("#year")
+    movieYear.innerText = movieInformations.year
+
+    const movieCategories = modal.querySelector("#categories")
+    movieCategories.innerText = movieInformations.genres.join(", ")
+
+    const movieDuration = modal.querySelector("#duration")
+    movieDuration.innerText = movieInformations.duration
+
+    const movieCountries = modal.querySelector("#countries")
+    movieCountries.innerText = movieInformations.countries.join("/")
+
+    const movieIMDBScore = modal.querySelector("#imdb-score")
+    movieIMDBScore.innerText = movieInformations.imdb_score
+
+    const movieDirectors = modal.querySelector("#directors")
+    movieDirectors.innerText = movieInformations.directors.join(", ")
+    
+    const movieActors = modal.querySelector("#actors")
+    movieActors.innerText = movieInformations.actors.join(", ")    
 }
 
 async function modifySelectedCategories() {
@@ -203,6 +290,8 @@ function addOpenModalOption(modal, button, mainOverlay) {
     button.onclick = function() {
         mainOverlay.classList.remove("d-none")
         modal.classList.add("d-block")
+        modifyModalInformations(button.value)
+
     }
 }
 
@@ -215,41 +304,30 @@ function modifyModalButtons() {
     // Ajoute la fonctionnalité de d'ouverture de la fenêtre lors du clique sur chaque bouton
     for (let i = 0; i < buttonsModalOpen.length; i++) {
         addOpenModalOption(modal, buttonsModalOpen[i], mainOverlay)
+        buttonsModalOpen[i].value = i
     }
 
     for (let i = 0; i < buttonsModalClose.length; i++) {
         addCloseModalOption(modal, buttonsModalClose[i], mainOverlay)
     }
 
-
-    // Ajoute la fonctionnalité de fermeture de la fenêtre lors du clique sur chaque bouton
-    // for (let i = 0; i < buttonsModalClose.length; i++) {
-    //     buttonsModalClose[i].onclick = function() {
-    //         modal.classList.remove("d-block")
-    //         mainOverlay.classList.add("d-none")
-    //     }
-    // }
-
-    // Ferme la fenêtre lorsque l'utilisteur clique autre part que la fenêtre.
     window.onclick = function(event) {
         if (event.target == modal) {
-            console.log(event.target)
             modal.classList.remove("d-block")
             mainOverlay.classList.add("d-none")
         }
     }
 }
 
-function showAllMovies() {
-    showMoviesOfACategory(bestMoviesHTMLId)
-    showMoviesOfACategory(firstCategoryMoviesHTMLId)
-    showMoviesOfACategory(secondCategoryMoviesHTMLId)
-    showMoviesOfACategory(freeCategoryMoviesHTMLId)
+function modifyAllCategories() {
+    modifyCategory(bestMoviesHTMLId)
+    modifyCategory(firstCategoryMoviesHTMLId)
+    modifyCategory(secondCategoryMoviesHTMLId)
+    modifyCategory(freeCategoryMoviesHTMLId)
 }
 
 function run() {
-    createAllCategories()
-    showAllMovies()
     modifySelectedCategories()
-    modifyModalButtons()
+    createAllCategories()
+    modifyAllCategories()
 }

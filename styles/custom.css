@@ -18,10 +18,6 @@
     opacity: 80%;
 }
 
-.container {
-    position: relative;
-}
-
 .film-title{
     position: relative;
     top: 15%;
@@ -40,10 +36,6 @@
     font-family: roboto;
 }
 
-h5{
-    font-size: 1em;
-}
-
 .display-6{
     font-size: 1.5em;
 }
@@ -54,6 +46,10 @@ h5{
       --bs-modal-width: 700px;
     }
 }
+
+.fs-7 {
+    font-size: 0.85rem !important;
+  }
 
 .overlay {
     position: absolute;
