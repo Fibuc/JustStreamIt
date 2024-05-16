@@ -4,7 +4,7 @@
   <img src="images/logo.png" alt="Logo du site JustStreamIt"/>
 </p>
 
-Ce repository comporte un site web de diffusion de vidéos nommé JustStreamIt.
+Ce repository comporte un site web de diffusion vidéos nommé JustStreamIt.
 
 ## Installation
 
@@ -19,9 +19,9 @@ Pour cloner le dépôt, vous devrez ouvrir le terminal et effectuer la commande 
 ### Installez l'API OCMovies-API-EN-FR
 
 Pour permettre de faire fonctionner le site, vous aurez besoin d'installer l'API OCMovies-API-EN-FR.
-Pour cela, rendez-vous sur le [dépôt github](https://github.com/OpenClassrooms-Student-Center/OCMovies-API-EN-FR) de l'API et de suivre les instructions d'installation et le lancement.
+Pour cela, rendez-vous sur le [dépôt github](https://github.com/OpenClassrooms-Student-Center/OCMovies-API-EN-FR) de l'API et suivre les instructions d'installation et de le lancement.
 
-Une fois fait le serveur de l'API démarré, vous pouvez lancer le fichier index.html et le site web apparaîtra.
+Une fois le serveur de l'API démarré, vous pouvez lancer le fichier index.html et le site web apparaîtra.
 
 Voici un aperçu :
 
