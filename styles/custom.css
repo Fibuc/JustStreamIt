@@ -1,55 +1,55 @@
-.img-best-movie{
+.img-best-movie {
     width: 100%;
 }
 
-.img-best-movie:hover{
+.img-best-movie:hover {
     opacity: 80%;
 }
 
-.modal-img{
+.modal-img {
     width: 100%;
 }
 
-.category-img-movie{
+.category-img-movie {
     width: 80%;
 }
 
-.category-img-movie:hover{
+.category-img-movie:hover {
     opacity: 80%;
 }
 
-.film-title{
+.movie-title {
     position: relative;
     top: 15%;
     left: 5%;
 }
 
-.btn-dark{
+.btn-dark {
     position: absolute;
     left: 60%;
     top: 50%;
 }
 
-.h1{
+.h1 {
     font-size: 4em;
     font-weight: 700;
     font-family: roboto;
 }
 
-.display-6{
+.display-6 {
     font-size: 1.5em;
 }
 
 @media (min-width: 992px) {
     .modal-lg,
     .modal-xl {
-      --bs-modal-width: 700px;
+        --bs-modal-width: 700px;
     }
 }
 
 .fs-7 {
     font-size: 0.85rem !important;
-  }
+}
 
 .overlay {
     position: absolute;
@@ -60,11 +60,10 @@
     background-color: rgba(0, 0, 0, 0.46);
 }
 
-.shadow-lg{
+.shadow-lg {
     --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.4);
 }
 
-.shadow-lg:hover{
+.shadow-lg:hover {
     --bs-box-shadow-lg: 0 1rem 1rem rgba(0, 0, 0, 0.6);
 }
-

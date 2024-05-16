@@ -1,43 +1,45 @@
 /**
- * Modifie les éléments HTML d'une catégorie par les données des films fournis.
- * 
- * @param {Array<Object>} allMovies - Tableau d'objets comprenant les informations des films.
- * @param {string} categoryID - ID de la catégorie à modifier.
+ * Modifie le texte d'un élément HTML avec le nom du film.
+ *
+ * @param {HTMLElement} titleInHTML - L'élément HTML du titre à modifier.
+ * @param {Object} movie - Les informations du film.
  */
-function modifyMoviesInformations(allMovies, categoryID) {
-    allImages = document.querySelectorAll("#" + categoryID + " img")
-    allTitles = document.querySelectorAll("#" + categoryID + " p")
-    for (let i = 0; i < nbMovieByCategory; i++) {
-        // if {}
-        modifyMovieImage(allImages[i], allMovies[i])
-        modifyMovieTitle(allTitles[i], allMovies[i])
-    }
-}
-
-function getMovieName(movie) {
-    if (movie.original_title) {
-        return movie.original_title
-    }
-    return movie.title
-}
-
-function modifyMovieTitle(titleInHTML, movie){
+function modifyMovieTitle(titleInHTML, movie) {
     let movieName = getMovieName(movie)
     titleInHTML.innerText = movieName
 }
 
+/**
+ * Modifie les propriétés de l'image en fonction des informations du film et retourne l'état de la modification.
+ *
+ * @param {HTMLImageElement} imageInHTML - L'élément image HTML à modifier.
+ * @param {Object} movieInformations - Les informations du film.
+ * @returns {boolean} Etat de la modification. Vrai si modifié avec succès, sinon faux.
+ */
 function modifyMovieImage(imageInHTML, movieInformations) {
-    imageInHTML.src = movieInformations.image_url
-    imageDescription = "Affiche du film " + getMovieName(movieInformations)
+    const imageDescription = "Affiche du film " + getMovieName(movieInformations)
     imageInHTML.alt = imageDescription
     imageInHTML.title = imageDescription
+    imageInHTML.src = movieInformations.image_url
 }
 
+/**
+ * Vérifie si la longueur de la description est bien supérieur au seuil indiqué dans le module config.js.
+ *
+ * @param {string} description - La description à vérifier.
+ * @returns {boolean} Vrai si la longueur de la description dépasse la limite, sinon faux.
+ */
 function checkLengthDescription(description) {
-    const minCaractereForDescription = 20
-    return description.length > minCaractereForDescription
+    return description.length > minCaracteresForDescription
 }
 
+/**
+ * Modifie la description affichée en fonction des informations du film.
+ *
+ * @param {HTMLElement} descriptionInHTML - L'élément HTML où afficher la description.
+ * @param {Object} movieInformations - Les informations du film.
+ * @param {boolean} longDescription - Indique si on doit utiliser la description longue.
+ */
 function modifyDescription(descriptionInHTML, movieInformations, longDescription) {
     let descriptionToAppend = ""
     if (longDescription) {
@@ -47,186 +49,166 @@ function modifyDescription(descriptionInHTML, movieInformations, longDescription
             return
         }
     }
+
     descriptionToAppend = movieInformations.description
     if (checkLengthDescription(descriptionToAppend)) {
         descriptionInHTML.innerText = descriptionToAppend
         return
     }
-    descriptionInHTML.innerText = "Pas de description."
 
+    descriptionInHTML.innerText = "Pas de description."
 }
 
-function modifyBestFilmInformations() {
-    sectionInHTML = document.querySelector("#best-film")
+/**
+ * Modifie les éléments HTML de la section du meilleur film avec les informations
+ * présentes dans le tableau bestMovieDatas.
+ */
+function modifyBestMovieInformations() {
+    const sectionInHTML = document.querySelector("#best-movie")
 
-    imageInHTML = sectionInHTML.querySelector("img")
+    const imageInHTML = sectionInHTML.querySelector("img")
     modifyMovieImage(imageInHTML, bestMovieDatas)
 
-    titleInHTML = sectionInHTML.querySelector("#title")
+    const titleInHTML = sectionInHTML.querySelector("#title")
     modifyMovieTitle(titleInHTML, bestMovieDatas)
 
-    descriptionInHTML = sectionInHTML.querySelector("#description")
-    modifyDescription(descriptionInHTML, bestMovieDatas, true)
+    const descriptionInHTML = sectionInHTML.querySelector("#description")
+    modifyDescription(descriptionInHTML, bestMovieDatas)
 }
 
+/**
+ * Modifie le titre de la catégorie spécifiée dans le HTML.
+ *
+ * @param {string} idHTML - L'ID de la section HTML contenant le titre à modifier.
+ * @param {string} category - Le nouveau titre de la catégorie.
+ */
 function modifyCategoryTitle(idHTML, category) {
     document.querySelector("#" + idHTML + " h1").innerText = category
 }
 
-async function modifyCategory(idHTML) {
-    let requestObject = {}
-    switch (idHTML) {
-        case bestMoviesHTMLId:
-            requestObject = createRequestObject()
-            bestMoviesDatas = await getMoviesDatas(requestObject, nbApiPageNeedBestFilms, idHTML)
-            bestMovieDatas = bestMoviesDatas.shift()
-            modifyMoviesInformations(bestMoviesDatas, idHTML)
-            modifyBestFilmInformations()
-            break
-        case firstCategoryMoviesHTMLId:
-            requestObject = createRequestObject(defaultFirstCategory)
-            bestMoviesDatasOfCategory1 = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
-            modifyMoviesInformations(bestMoviesDatasOfCategory1, idHTML)
-            modifyCategoryTitle(idHTML, defaultFirstCategory)
-            break
-        case secondCategoryMoviesHTMLId:
-            requestObject = createRequestObject(defaultSecondCategory)
-            bestMoviesDatasOfCategory2 = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
-            modifyMoviesInformations(bestMoviesDatasOfCategory2, idHTML)
-            modifyCategoryTitle(idHTML, defaultSecondCategory)
-            break
-        case freeCategoryMoviesHTMLId:
-            requestObject = createRequestObject(defaultSelectedCategory)
-            bestMoviesDatasOfSelectedCategory = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
-            modifyMoviesInformations(bestMoviesDatasOfSelectedCategory, idHTML)
-            modifyModalActions()
-            break
+/**
+ * Supprime toutes les colonnes de films et le bouton "Voir plus" d'une section.
+ * @param {string} categoryID - L'ID de la section de la catégorie.
+ */
+function removeAllElementsInCategory(categoryID) {
+    const categorySection = document.getElementById(categoryID)
+    const allElements = categorySection.querySelectorAll("div.col")
+    allElements.forEach((column) => {
+        column.remove()
+    })
+    categorySection.querySelector("button").remove()
+}
+
+/**
+ * Modifie les éléments HTML d'une catégorie par les données des films fournis.
+ *
+ * @param {Array<Object>} allMovies - Tableau d'objets comprenant les informations des films.
+ * @param {string} categoryID - ID de la catégorie à modifier.
+ */
+function modifyMoviesInformations(allMovies, categoryID) {
+    const allImages = document.querySelectorAll("#" + categoryID + " img")
+    const allTitles = document.querySelectorAll("#" + categoryID + " p")
+    for (let i = 0; i < nbMovieByCategory && i < allMovies.length; i++) {
+        modifyMovieImage(allImages[i], allMovies[i])
+        modifyMovieTitle(allTitles[i], allMovies[i])
     }
 }
 
+/**
+ * Modifie toutes les informations de la catégorie spécifiée en fonction de son ID HTML.
+ *
+ * @param {string} idHTML - L'ID HTML de la catégorie à modifier.
+ */
+async function modifyCategory(idHTML) {
+    let requestObject = {}
+    switch (idHTML) {
+        // Cas ou l'id entré en paramètre est celui des meilleurs films
+        case bestMoviesHTMLId:
+            requestObject = createRequestObject()
+            bestMoviesDatas = await getMoviesDatas(requestObject, nbApiPageNeedBestFilms, idHTML)
+            // Sépare le meilleur films des autres films
+            bestMovieDatas = bestMoviesDatas.shift()
+            createCategoryGrid(idHTML, bestMoviesDatas)
+            modifyMoviesInformations(bestMoviesDatas, idHTML)
+            modifyBestMovieInformations()
+            break
+
+        // Cas ou l'id entré en paramètre est celui de la première catégorie
+        case firstCategoryMoviesHTMLId:
+            requestObject = createRequestObject(defaultFirstCategory)
+            bestMoviesDatasOfCategory1 = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
+            createCategoryGrid(idHTML, bestMoviesDatasOfCategory1)
+            modifyMoviesInformations(bestMoviesDatasOfCategory1, idHTML)
+            modifyCategoryTitle(idHTML, defaultFirstCategory)
+            break
+
+        // Cas ou l'id entré en paramètre est celui de la deuxième catégorie
+        case secondCategoryMoviesHTMLId:
+            requestObject = createRequestObject(defaultSecondCategory)
+            bestMoviesDatasOfCategory2 = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
+            createCategoryGrid(idHTML, bestMoviesDatasOfCategory2)
+            modifyMoviesInformations(bestMoviesDatasOfCategory2, idHTML)
+            modifyCategoryTitle(idHTML, defaultSecondCategory)
+            break
+
+        // Cas ou l'id entré en paramètre est celui de la catégorie libre.
+        case freeCategoryMoviesHTMLId:
+            requestObject = createRequestObject(defaultSelectedCategory)
+            bestMoviesDatasOfSelectedCategory = await getMoviesDatas(requestObject, nbApiPageNeedCategories, idHTML)
+            // Supprime les colonnes pour les recréer selon le nombre d'éléments de la catégorie.
+            try {
+                removeAllElementsInCategory(idHTML)
+            } catch {
+                // Essaie de supprimer les éléments, s'il n'y en a pas, ne fait rien.
+            }
+            createCategoryGrid(idHTML, bestMoviesDatasOfSelectedCategory)
+            modifyMoviesInformations(bestMoviesDatasOfSelectedCategory, idHTML)
+            break
+    }
+    modifyModalActions()
+}
+
+/**
+ * Retourne les classes permettant de masquer les éléments pour les petits formats
+ * d'écran selon le nombre de films affichés par défaut pour les tablette et les portables.
+ *
+ * @param {number} currentMovieNumber - Le numéro actuel du films.
+ * @returns {(string[]|boolean)} Un tableau de classes à ajouter si le nombre de films dépasse les
+ * paramètres par défaut, sinon false.
+ */
 function addClassDNoneIfSmallScreens(currentMovieNumber) {
     let classToAdd = []
     if (currentMovieNumber > nbMovieShowOnTablet) {
         classToAdd.push("d-none", "d-lg-block")
         return classToAdd
     }
+
     if (currentMovieNumber > nbMovieShowOnPhone) {
         classToAdd.push("d-none", "d-md-block")
         return classToAdd
     }
+
     return false
 }
 
-function createMovieColumn(indexMovieNumber) {
-    currentMovieNumber = indexMovieNumber + 1
-    // Création de la colonne.
-    let classToAdd = addClassDNoneIfSmallScreens(currentMovieNumber)
-    const colDiv = document.createElement("div")
-    colDiv.classList.add("col", "position-relative")
-    // Ajout de la classe permettant de limiter l'affichage pour les petits écrans.
-    if (classToAdd) {
-        colDiv.classList.add(classToAdd[0], classToAdd[1])
-    }
-
-    // Création de l'image.
-    const img = document.createElement("img")
-    img.classList.add("category-img-movie", "mx-auto", "d-block", "shadow-lg", "mb-5", "bg-body-tertiary", "rounded")
-
-    // Création de l'overlay.
-    const overlayDiv = document.createElement("div")
-    overlayDiv.classList.add("overlay")
-
-    // Création du titre.
-    const movieTitle = document.createElement("p")
-    movieTitle.classList.add("text-white", "h5", "film-title")
-    movieTitle.textContent = `Titre ${currentMovieNumber} film`
-
-    // Création du bouton.
-    const button = document.createElement("button")
-    button.type = "button"
-    button.id = "open-modal"
-    button.classList.add("btn", "btn-dark")
-    button.textContent = "Détails"
-
-    // Ajout des éléments à l'overlay.
-    overlayDiv.appendChild(movieTitle)
-    overlayDiv.appendChild(button)
-
-    // Ajout des éléments à la colonne.
-    colDiv.appendChild(img)
-    colDiv.appendChild(overlayDiv)
-
-    return colDiv
-}
-
-function createShowMoreButton(indexSection) {
-    const btnShowMore = document.createElement("button")
-    btnShowMore.textContent = "Voir plus"
-    btnShowMore.classList.add("btn", "btn-danger", "col-5", "btn-lg", "mx-auto", "d-lg-none")
-    btnShowMore.id = "btn-show-more-" + indexSection
-    return btnShowMore
-}
-
-function eventShowMore(elementToListen, section) {
-    elementToListen.addEventListener("click", () => {
-        allCols = section.querySelectorAll("div.col")
-        for (let i = 0; i < allCols.length; i++) {
-            if (allCols[i].classList.contains("d-none")) {
-                allCols[i].classList.remove("d-none")
-            }
-        elementToListen.classList.add("d-none")
-        }
-    })
-}
-
+/**
+ * Met à jour les informations de la catégorie sélectionnée par défaut lorsque
+ * l'événement d'un changement est réalisé sur l'élément selection.
+ */
 function eventChangeCategory() {
     const selectionDiv = document.getElementById("selection")
-    selectionDiv.addEventListener("change", () => {
+    selectionDiv.onchange = () => {
         defaultSelectedCategory = allCategories[selectionDiv.value]
         modifyCategory(freeCategoryMoviesHTMLId)
-    })
-}
-
-function createAllCategories() {
-    let allSections = document.querySelectorAll("section")
-    for (let indexSection = 0; indexSection < allSections.length; indexSection++)
-        if (allSections[indexSection].id !== bestMovieHTMLId) {
-            const rowDiv = document.createElement("div")
-            rowDiv.classList.add("row", "row-cols-1", "row-cols-md-2", "row-cols-lg-3", "grid", "gap-0", "row-gap-5", "align-items-center")
-            for (let i = 0; i < nbMovieByCategory; i++) {
-                let movieColumns = createMovieColumn(i)
-                rowDiv.appendChild(movieColumns)
-            }
-            const btnShowMore = createShowMoreButton(indexSection)
-            eventShowMore(btnShowMore, allSections[indexSection])
-            rowDiv.appendChild(btnShowMore)
-            allSections[indexSection].appendChild(rowDiv)
-        }
-}
-
-function getMovieInformations(value) {
-    bestMovie = 1
-    let numberOfMoviesShow = numberOfCategoryShow * nbMovieByCategory + bestMovie
-    let indexStartBestCategory = numberOfMoviesShow - nbMovieByCategory * 4
-    let indexStartFirstCategory = numberOfMoviesShow - nbMovieByCategory * 3
-    let indexStartSecondCategory = numberOfMoviesShow - nbMovieByCategory * 2
-    let indexStartFreeCategory = numberOfMoviesShow - nbMovieByCategory
-    if (value >= indexStartFreeCategory) {
-        let index = value - indexStartFreeCategory
-        return bestMoviesDatasOfSelectedCategory[index]
-    } else if (value >= indexStartSecondCategory) {
-        let index = value - indexStartSecondCategory
-        return bestMoviesDatasOfCategory2[index]
-    } else if (value >= indexStartFirstCategory) {
-        let index = value - indexStartFirstCategory
-        return bestMoviesDatasOfCategory1[index]
-    } else if (value >= indexStartBestCategory) {
-        let index = value - indexStartBestCategory
-        return bestMoviesDatas[index]
     }
-    return bestMovieDatas
 }
 
+/**
+ * Modifie les informations affichées dans la fenêtre modale en fonction de la position
+ * du film dans la liste des films affichés.
+ *
+ * @param {number} value - La position du film dans la liste des films affichés.
+ */
 function modifyModalInformations(value) {
     const modal = document.getElementById("movie-modal")
     const movieInformations = getMovieInformations(value)
@@ -259,88 +241,17 @@ function modifyModalInformations(value) {
 
     const movieDirectors = modal.querySelector("#directors")
     movieDirectors.innerText = movieInformations.directors.join(", ")
-    
+
     const movieActors = modal.querySelector("#actors")
-    movieActors.innerText = movieInformations.actors.join(", ")    
+    movieActors.innerText = movieInformations.actors.join(", ")
 }
 
-async function modifySelectedCategories() {
-    await fetchAllCategories()
-    let options = ""
-    let sectionInHTML = document.querySelector("#selection")
-    for (let i = 0; i < allCategories.length; i++) {
-        if (allCategories[i] === defaultSelectedCategory) {
-            options += `<option value="${i}" selected>${defaultSelectedCategory}</option>`
-        } else {
-            options += `<option value="${i}">${allCategories[i]}</option>`
-        }
-    }
-    sectionInHTML.innerHTML = options
-    eventChangeCategory()
-}
-
-function addCloseModalOption(modal, button, mainOverlay) {
-    button.onclick = function() {
-        mainOverlay.classList.add("d-none")
-        modal.classList.remove("d-block")
-    }
-}
-
-function addOpenModalOption(modal, button, mainOverlay) {
-    button.onclick = function() {
-        mainOverlay.classList.remove("d-none")
-        modal.classList.add("d-block")
-        modifyModalInformations(button.value)
-
-    }
-}
-
-function modifyModalActions() {
-    const modal = document.getElementById("movie-modal")
-    const mainOverlay = document.getElementById("main-overlay")
-    const buttonsModalOpen = document.querySelectorAll("#open-modal")
-    const buttonsModalClose = modal.querySelectorAll("#close-modal")
-    const allCategoryImages = document.querySelectorAll(".category-img-movie")
-    const allImagesMovies = [document.querySelectorAll(".img-best-movie")[0]]
-    allCategoryImages.forEach(image => {
-        allImagesMovies.push(image)
-    })
-
-    console.log(allImagesMovies)
-
-    // Ajoute la fonctionnalité de d'ouverture de la fenêtre lors du clique sur chaque bouton
-    for (let i = 0; i < buttonsModalOpen.length; i++) {
-        addOpenModalOption(modal, buttonsModalOpen[i], mainOverlay)
-        buttonsModalOpen[i].value = i
-    }
-
-    // Ajoute la fonctionnalité de d'ouverture de la fenêtre lors du clique sur chaque image
-    for (let i = 0; i < allImagesMovies.length; i++) {
-        addOpenModalOption(modal, allImagesMovies[i], mainOverlay)
-        allImagesMovies[i].value = i
-    }
-
-    buttonsModalClose.forEach(button => {
-        addCloseModalOption(modal, button, mainOverlay)
-    })
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.classList.remove("d-block")
-            mainOverlay.classList.add("d-none")
-        }
-    }
-}
-
+/**
+ * Modifie toutes les catégories inscrite dans par défaut dans le fichier config.js.
+ */
 function modifyAllCategories() {
     modifyCategory(bestMoviesHTMLId)
     modifyCategory(firstCategoryMoviesHTMLId)
     modifyCategory(secondCategoryMoviesHTMLId)
     modifyCategory(freeCategoryMoviesHTMLId)
-}
-
-function run() {
-    modifySelectedCategories()
-    createAllCategories()
-    modifyAllCategories()
 }

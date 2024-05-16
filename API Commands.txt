@@ -1,0 +1,66 @@
+Commandes API Just Stream It :
+=================================
+=================================
+
+-----------  TITLES  -----------
+
+========= Date =========
+year=
+min_year=
+max_year=
+
+========= IMDB =========
+imdb_score=
+imdb_score_min=
+imdb_score_max=
+
+========= Titres =========
+title=
+title_contains=
+
+========= Genre =========
+genre=
+genre_contains=
+
+========= Divers =========
+sort_by=
+
+========= Réalisateur =========
+director=
+director_contains=test
+
+========= Scénariste =========
+writer=
+writer_contains=
+
+========= Acteurs =========
+actor=
+actor_contains=
+
+========= Pays =========
+country=
+country_contains=
+
+========= Langue =========
+lang=
+lang_contains=
+
+========= Production =========
+company=
+company_contains=
+
+========= Note =========
+rating=
+rating_contains=
+
+=================================
+=================================
+
+-----------  GENRES  -----------
+
+========= Titres =========
+name=
+name_contains=
+
+========= Nom film =========
+movie_title_contains=

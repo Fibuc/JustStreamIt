@@ -1,164 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- BOOTSTRAP CSS -->
+        <link rel="stylesheet" href="styles/bootstrap.css" />
+        <!-- Surcharge et custom css de bootstrap -->
+        <link rel="stylesheet" href="styles/custom.css" />
+        <!-- Eléments JavaScripts -->
+        <script src="scripts/config.js" defer></script>
+        <script src="scripts/fetchDatas.js" defer></script>
+        <script src="scripts/createNode.js" defer></script>
+        <script src="scripts/modifyHTML.js" defer></script>
+        <script src="scripts/main.js" defer></script>
+        <title>JustStreamIt</title>
+    </head>
 
-  <!-- BOOTSTRAP CSS -->
-  <link rel="stylesheet" href="styles/bootstrap.css">
-  <!-- Surcharge et custom css de bootstrap -->
-  <link rel="stylesheet" href="styles/custom.css">
-  <!-- Eléments JavaScripts -->
-  <script src="scripts/config.js" defer></script>
-  <script src="scripts/fetchAPI.js" defer></script>
-  <script src="scripts/modifyHTML.js" defer></script>
-  <script src="scripts/main.js" defer></script>
-  <title>JustStreamIt</title>
+    <body>
+        <header class="bg-secondary container">
+            <div class="row row-cols-md-2 row-cols-lg-3">
+                <div class="col-sm-12 col-md-4">
+                    <img
+                        src="images/logo.png"
+                        alt="Logo JustStreamIt"
+                        title="Logo JustStreamIt"
+                        class="mx-auto d-block"
+                    />
+                </div>
+                <div class="col col-md-7 col-lg-8 text-md-end text-lg-start my-auto">
+                    <h1 class="display-5 d-none d-md-block text-white">Vidéos à la demande</h1>
+                </div>
+            </div>
+        </header>
 
-</head>
+        <main>
+            <h1 class="text-center mt-5 mb-5">Meilleur Film</h1>
+            <section id="best-movie" class="container border border-black border-5">
+                <div class="row p-2">
+                    <!-- Image -->
+                    <div class="col col-12 col-md-4 col-lg-3">
+                        <img src="" class="img-best-movie img-sm-fluid mx-auto bg-body-tertiary rounded" />
+                    </div>
+                    <!-- Conteneurs à droite -->
+                    <div class="col">
+                        <!-- Titre -->
+                        <div class="row">
+                            <div class="col col-12">
+                                <p class="text-black h1" id="title">Titre 1 film</p>
+                            </div>
+                        </div>
+                        <!-- Description -->
+                        <div class="row">
+                            <div class="col">
+                                <p class="text-black display-6" id="description">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua.
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Bouton -->
+                        <div class="row row-cols-md-2 row-cols-lg-4 justify-content-end">
+                            <div class="col text-md-end d-grid d-block">
+                                <button
+                                    type="button"
+                                    id="open-modal"
+                                    class="btn btn-danger btn-lg mx-md-3 my-md-4"
+                                    value="0"
+                                >
+                                    Détails
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-<body>
-  <header class="bg-secondary container">
-    <div class="row row-cols-md-2 row-cols-lg-3">
-      <div class="col-sm-12 col-md-4">
-        <img src="images/logo.png" alt="Logo JustStreamIt" title="Logo JustStreamIt" class="mx-auto d-block">
-      </div>
-      <div class="col col-md-7 col-lg-8 text-md-end text-lg-start my-auto">
-        <h1 class="display-5 d-none d-md-block text-white">Vidéos à la demande</h1>
-      </div>
-    </div>
-  </header>
+            <!-- Section des films les mieux notés -->
+            <section id="best-category" class="container">
+                <h1 class="text-center mb-5 mt-5">Films les mieux notés</h1>
+            </section>
 
-  <main>
+            <!-- Section des films de la catégorie définie dans defaultFirstFreeCategory -->
+            <section id="first-category" class="container">
+                <h1 class="text-center mb-5 mt-5">Catégorie 1</h1>
+            </section>
 
-    <h1 class="text-center mt-5 mb-5">Meilleur Film</h1>
-    <section id="best-film" class="container border border-black border-5">
-      <div class="row p-2">
-        <!-- Image -->
-        <div class="col col-12 col-md-4 col-lg-3">
-          <img src="" class="img-best-movie img-sm-fluid mx-auto bg-body-tertiary rounded">
+            <!-- Section des films de la catégorie définie dans defaultSecondFreeCategory -->
+            <section id="second-category" class="container">
+                <h1 class="text-center mb-5 mt-5">Catégorie 2</h1>
+            </section>
+
+            <!-- Section des films de la catégorie définie dans defaultSelectedCategory -->
+            <h1 class="text-center mt-5">Autres catégories</h1>
+            <section id="free-category" class="container">
+                <select class="form-select form-select-lg mb-5" aria-label="Large select example" id="selection">
+                    <option selected>Open this select menu</option>
+                    <option value="1">One</option>
+                </select>
+            </section>
+        </main>
+
+        <!-- Overlay du main -->
+        <div id="main-overlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-75 d-none"></div>
+
+        <!-- Fenêtre modale -->
+        <div id="movie-modal" class="modal">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <button type="button" class="btn-close ms-auto d-lg-none" id="close-modal"></button>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h1>Nom du Film</h1>
+                                    <p class="fw-bold">
+                                        <span id="year">Année</span> - <span id="categories">Catégories</span><br />
+                                        <span id="duration">Durée</span> minutes (<span id="countries">Pays</span
+                                        >)<br />
+                                        IMDB score: <span id="imdb-score">Note</span>/10<br />
+                                    </p>
+
+                                    <hr />
+                                    <p class="fw-bold">
+                                        Réalisé par:<br />
+                                        <span class="fw-normal" id="directors">Nom des réalisateurs.</span>
+                                    </p>
+                                    <hr class="d-lg-none" />
+                                </div>
+                                <div class="col-lg-4 d-none d-lg-block mb-2">
+                                    <img src="" alt="" class="modal-img bg-body-tertiary rounded" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <hr class="d-none d-lg-block" />
+                                <p id="modal-description">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                                    incididunt ut labore et dolore magna aliqua. Erat pellentesque adipiscing commodo
+                                    elit at imperdiet dui accumsan sit. Pellentesque elit ullamcorper dignissim cras
+                                    tincidunt lobortis feugiat vivamus at. Maecenas pharetra convallis posuere morbi.
+                                    Integer enim neque volutpat ac. Aliquet nibh praesent tristique magna sit amet.
+                                    Bibendum est ultricies integer quis auctor elit. Duis at consectetur lorem donec
+                                    massa sapien faucibus et molestie. Senectus et netus et malesuada fames. Ut sem
+                                    viverra aliquet eget. Blandit aliquam etiam erat velit scelerisque in. Orci a
+                                    scelerisque purus semper eget duis.
+                                </p>
+                            </div>
+                            <div class="row justify-content-center d-lg-none">
+                                <div class="col-md-6">
+                                    <img
+                                        src="https://picsum.photos/200/300"
+                                        alt=""
+                                        class="modal-img bg-body-tertiary rounded"
+                                    />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <hr />
+                                    <p class="fw-bold fs-7">
+                                        Avec :<br />
+                                        <span class="fw-normal" id="actors">Nom des acteurs.</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-5 text-center">
+                                    <button type="button" class="btn btn-danger" id="close-modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Conteneurs à droite -->
-        <div class="col">
-          <!-- Titre -->
-          <div class="row">
-            <div class="col col-12">
-              <p class="text-black h1" id="title">Titre 1 film</p>
-            </div>
-          </div>
-          <!-- Description -->
-          <div class="row">
-            <div class="col">
-              <p class="text-black display-6" id="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            </div>
-          </div>
-          <!-- Bouton -->
-          <div class="row row-cols-md-2 row-cols-lg-4 justify-content-end">
-            <div class="col text-md-end d-grid d-block">
-              <button type="button" id="open-modal" class="btn btn-danger btn-lg mx-md-3 my-md-4"
-                value="0">Détails</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Section des films les mieux notés -->
-    <section id="best-category" class="container">
-      <h1 class="text-center mb-5 mt-5">Films les mieux notés</h1>
-    </section>
-
-    <!-- Section des films de la catégorie définie dans defaultFirstFreeCategory -->
-    <section id="first-category" class="container">
-      <h1 class="text-center mb-5 mt-5">Catégorie 1</h1>
-    </section>
-
-    <!-- Section des films de la catégorie définie dans defaultSecondFreeCategory -->
-    <section id="second-category" class="container">
-      <h1 class="text-center mb-5 mt-5">Catégorie 2</h1>
-    </section>
-
-    <!-- Section des films de la catégorie définie dans defaultSelectedCategory -->
-    <h1 class="text-center mt-5">Autres catégories</h1>
-    <section id="free-category" class="container">
-      <select class="form-select form-select-lg mb-5" aria-label="Large select example" id="selection">
-        <option selected>Open this select menu</option>
-        <option value="1">One</option>
-      </select>
-    </section>
-
-  </main>
-
-  <!-- Overlay du main -->
-  <div id="main-overlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-75 d-none"></div>
-
-  <!-- Fenêtre modale -->
-  <div id="movie-modal" class="modal">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row">
-              <button type="button" class="btn-close ms-auto d-lg-none" id="close-modal"></button>
-            </div>
-            <div class="row">
-              <div class="col-lg-8">
-                <h1>Nom du Film</h1>
-                <p class="fw-bold"><span id="year">Année</span> - <span id="categories">Catégories</span><br>
-                <span id="duration">Durée</span> minutes (<span id="countries">Pays</span>)<br>
-                IMDB score: <span id="imdb-score">Note</span>/10<br>
-                <hr>
-                <p class="fw-bold">Réalisé par:<br>
-                  <span class="fw-normal" id="directors">Nom des réalisateurs.</span>
-                </p>
-                <hr class="d-lg-none">
-              </div>
-              <div class="col-lg-4 d-none d-lg-block mb-2">
-
-                <img src="" alt="" class="modal-img bg-body-tertiary rounded">
-
-              </div>
-            </div>
-            <div class="row">
-              <hr class="d-none d-lg-block">
-              <p id="modal-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Erat pellentesque adipiscing commodo elit at imperdiet
-                dui accumsan sit. Pellentesque elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus at.
-                Maecenas pharetra convallis posuere morbi. Integer enim neque volutpat ac. Aliquet nibh praesent
-                tristique magna sit amet. Bibendum est ultricies integer quis auctor elit. Duis at consectetur lorem
-                donec massa sapien faucibus et molestie. Senectus et netus et malesuada fames. Ut sem viverra aliquet
-                eget. Blandit aliquam etiam erat velit scelerisque in. Orci a scelerisque purus semper eget duis.</p>
-            </div>
-            <div class="row justify-content-center d-lg-none">
-              <div class="col-md-6">
-                <img src="https://picsum.photos/200/300" alt="" class="modal-img bg-body-tertiary rounded">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <hr>
-                <p class="fw-bold fs-7">Avec :<br>
-                  <span class="fw-normal" id="actors">Nom des acteurs.</span>
-                </p>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-5 text-center">
-                <button type="button" class="btn btn-danger" id="close-modal">Fermer</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <hr>
-  </footer>
-</body>
-
+        <footer>
+            <hr />
+        </footer>
+    </body>
 </html>
