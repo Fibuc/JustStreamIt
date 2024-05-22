@@ -31,8 +31,7 @@ function createMovieColumn(indexMovieNumber) {
     // Création du bouton.
     const button = document.createElement("button")
     button.type = "button"
-    button.id = "open-modal"
-    button.classList.add("btn", "btn-dark")
+    button.classList.add("btn", "btn-dark", "open-modal")
     button.textContent = "Détails"
 
     // Ajout des éléments à l'overlay.
@@ -187,13 +186,13 @@ function modifyModalActions() {
 
     // Récupération de toutes les images.
     const allCategoryImages = document.querySelectorAll(".category-img-movie")
-    const allImagesMovies = [document.querySelectorAll(".img-best-movie")[0]]
+    const allImagesMovies = [document.querySelector(".img-best-movie")]
     allCategoryImages.forEach((image) => {
         allImagesMovies.push(image)
     })
 
     // Ajout de la fonctionnalité d'ouverture de la fenêtre lors du clique sur chaque bouton.
-    const buttonsModalOpen = document.querySelectorAll("#open-modal")
+    const buttonsModalOpen = document.querySelectorAll("button.open-modal")
     for (let i = 0; i < buttonsModalOpen.length; i++) {
         addOpenModalOption(modal, buttonsModalOpen[i], mainOverlay)
         buttonsModalOpen[i].value = i
@@ -206,7 +205,7 @@ function modifyModalActions() {
     }
 
     // Ajout de la fonctionnalité de fermeture de la fenêtre lors du clique un bouton.
-    const buttonsModalClose = modal.querySelectorAll("#close-modal")
+    const buttonsModalClose = modal.querySelectorAll("button.close-modal")
     buttonsModalClose.forEach((button) => {
         addCloseModalOption(modal, button, mainOverlay)
     })
